@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer>
+    </script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "YOUR_PUBLIC_KEY",
+            });
+        })();
+    </script> -->
+
+</head>
+
+<body>
+    <div id="content_container">
+        <div id="form_container">
+            <div id="form_header_container">
+                <h2 id="form_header"> Login + Firebase Database </h2>
+            </div>
+            <div id="form_content_container">
+                <div id="form_content_inner_container">
+                    <input type="text" id="username" placeholder="username ">
+                    <input type="email" id="email" name="email" placeholder="Email">
+                    <input type="password" id="password" name="password" placeholder="New Password">
+
+                    <!-- <input type="submit" id="login" name="login" value="Login"> -->
+                    <input type="submit" id="signUp" name="signUp" value="signUp">
+                    <!-- <div id="button_container">
+                        <button onclick="login()">SIgn Up</button>
+                        
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, set, ref ,update} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDtFWYo9bWw_Yz-jVpIzk6VnPRBQ6d5uZc",
+        authDomain: "login-with-firebase-data-9461a.firebaseapp.com",
+        projectId: "login-with-firebase-data-9461a",
+        storageBucket: "login-with-firebase-data-9461a.appspot.com",
+        messagingSenderId: "439104305821",
+        appId: "1:439104305821:web:612d0f6e1c30a52dc33274"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app)
+    const auth = getAuth();
+
+    const signUp = document.querySelector("#signUp")
+
+    signUp.addEventListener("click", () => {
+
+        const email = document.querySelector("#email").value
+        const password = document.querySelector("#password").value
+        const username = document.querySelector("#username").value
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up 
+                const user = userCredential.user;
+
+                set(ref(database, "users/" + user.uid), {
+                    username: username,
+                    email: email
+                })
+
+                alert("user created")
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+                alert(errorMessage)
+            });
+    })
+
+    // const login = document.querySelector("#login")
+
+  
+    //  login.addEventListener("click",()=>{
+    //     const email = document.querySelector("#email").value
+    //     const password = document.querySelector("#password").value
+
+    //     signInWithEmailAndPassword(auth, email, password)
+    //         .then((userCredential) => {
+    //             // Signed in 
+    //             const user = userCredential.user;
+
+    //             const dt = new Date()
+    //             update(ref(database, "users/" + user.uid), {
+    //                 last_login: dt,
+    //             })
+
+    //             alert("User Loged In!")
+    //             // ...
+    //         })
+    //         .catch((error) => {
+    //             const errorCode = error.code;
+    //             const errorMessage = error.message;
+
+    //             alert(errorMessage)
+    //         });
+    // })
+</script>
+
+</html>
